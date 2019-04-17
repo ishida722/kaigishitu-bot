@@ -2,7 +2,7 @@ from urllib import request
 from bs4 import BeautifulSoup
 import requests, json
 import datetime
-
+import secrets as s
 class Day:
     def __str__(self):
         return '{} 本館:{} ST:{}'.format(self.date, self.honkan4f, self.st)
@@ -43,8 +43,7 @@ def GetDay(num):
     return ret
 
 def Post(text):
-    WEB_HOOK_URL = "{Webhook URL}"
-    requests.post(WEB_HOOK_URL, data = json.dumps({
+    requests.post(s.WEB_HOOK_URL, data = json.dumps({
         'text': text,  #通知内容
         'username': 'Kaigishitu-bot',  #ユーザー名
     }))
