@@ -3,6 +3,10 @@ from bs4 import BeautifulSoup
 import requests, json
 import datetime
 import secrets as s
+
+URL = s.URL
+WEB_HOOK_URL = s.WEB_HOOK_URL
+
 class Day:
     def __str__(self):
         return '{} 本館:{} ST:{}'.format(self.date, self.honkan4f, self.st)
@@ -13,11 +17,8 @@ class Day:
         self.st = []
 
 def GetDay(num):
-    #url
-    url = "http://192.168.1.222:81/cgi-bin/yoyaku/yoyaku.cgi"
-
     #get html
-    html = request.urlopen(url)
+    html = request.urlopen(URL)
 
     #set BueatifulSoup
     soup = BeautifulSoup(html, "html.parser")
@@ -43,11 +44,13 @@ def GetDay(num):
     return ret
 
 def Post(text):
-    requests.post(s.WEB_HOOK_URL, data = json.dumps({
+    requests.post(WEB_HOOK_URL, data = json.dumps({
         'text': text,  #通知内容
         'username': 'Kaigishitu-bot',  #ユーザー名
     }))
 
 if __name__ == "__main__":
     today = datetime.date.today().day
-    print(GetDay(today))
+    reserveInfo = GetDay(today)
+    text = 'おはようございます。\n' + reserveInfo + '\n' + URL
+    print(text)
